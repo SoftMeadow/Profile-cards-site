@@ -18,7 +18,7 @@ const theme = createTheme({
         fontWeight: 100,
         fontFamily: '"Rubik", serif;',
       },
-      h2: {
+      h3: {
         fontSize: 30,
         fontWeight: 200,
         fontFamily: '"Rubik", serif;',
