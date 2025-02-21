@@ -1,0 +1,24 @@
+{
+  "info": [
+    {
+      "id": 1,
+      "login": "user1",
+      "email": "user1@example.com"
+    },
+    {
+      "id": 2,
+      "login": "user2",
+      "email": "user2@example.com"
+    },
+    {
+      "id": 3,
+      "login": "user3",
+      "email": "user3@example.com"
+    },
+    {
+      "id": "6dca",
+      "login": "me",
+      "email": "me@me"
+    }
+  ]
+}
