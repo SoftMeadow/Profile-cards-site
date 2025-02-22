@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { TextField, Button, Box, Typography, Container } from '@mui/material';
 
@@ -10,17 +10,16 @@ function Login(){
     const HandleLogin = (e) => {
         e.preventDefault();
         if (login && email) {     
-            fetch('http://localhost:3500/info', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ login, email }),
-              })  
-              .then(response => response.json())
-              .then(user => console.log('User added:', user));
+            // fetch('http://localhost:3500/info', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ login, email }),
+            //   })  
+            //   .then(response => response.json())
+            //   .then(user => console.log('User added:', user));
             navigate("/profiles");
         } 
     }
-    
 
     return (
         <Container

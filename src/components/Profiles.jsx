@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Box, Typography, Card, CardContent, TextField, Button } from '@mui/material';
+import { Container, Box, Typography, Card, CardContent, TextField } from '@mui/material';
 import './Profiles.css';
 
 const SearchBar = ({ setSearchQuery }) => (
@@ -7,9 +7,7 @@ const SearchBar = ({ setSearchQuery }) => (
     <TextField
       id="search-bar"
       className="text"
-      onInput={(e) => {
-        setSearchQuery(e.target.value);
-      }}
+      onInput={(e) => setSearchQuery(e.target.value)}
       label="Enter login"
       variant="outlined"
       placeholder="Search..."
@@ -21,35 +19,54 @@ const SearchBar = ({ setSearchQuery }) => (
 function Profiles() {
   const [searchQuery, setSearchQuery] = useState('');
   const [users, setUsers] = useState([]);
-  
+
   useEffect(() => {
-    fetch('http://localhost:3500/info')
-      .then(response => response.json())
-      .then(setUsers);
-  }, []);
+    fetchUsers(searchQuery);
+  }, [searchQuery]);
 
+  async function fetchUsers(query) {
+    const url = `http://212.41.9.231:8001/api/users/?page=1&page_size=100&query=${encodeURIComponent(query)}`;
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json' }
+      });
 
-  const filterData = (query, users) => {
-    if (!query) {
-      return users;
+      if (!response.ok) {
+        throw new Error(`Response failed: ${response.status}`);
+      }
+
+      const json = await response.json();
+      console.log("API Response:", json); // Проверка ответа API
+
+      if (json.values && Array.isArray(json.values)) {
+        setUsers(json.values);
+      } else {
+        console.warn("API response does not contain 'values' array:", json);
+        setUsers([]);
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error.message);
+      setUsers([]);
     }
-    return users.filter((user) => user.login.toLowerCase().includes(query.toLowerCase()));
-  };
-
-  const filteredUsers = filterData(searchQuery, users);
+  }
 
   return (
     <Container className="container">
       <SearchBar setSearchQuery={setSearchQuery} />
       <Box className="box">
-        {filteredUsers.map((user, index) => (
-          <Card key={index} className="card">
-            <CardContent>
-              <Typography variant="h3">{user.login}</Typography>
-              <Typography variant="body1">{user.email}</Typography>
-            </CardContent>
-          </Card>
-        ))}
+        {users.length === 0 ? (
+          <Typography variant="h5">No users found</Typography>
+        ) : (
+          users.map((user) => (
+            <Card key={user.id} className="card">
+              <CardContent>
+                <Typography variant="h5">{user.fio || "No Name"}</Typography>
+                <Typography variant="body1">{user.email || "No Email"}</Typography>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </Box>
     </Container>
   );
